@@ -1,6 +1,8 @@
 package lc.photochallenge;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -43,6 +45,8 @@ public class MainActivity extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final ViewPager pager = (ViewPager)findViewById(R.id.pager);
+        final TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
 
         try {
             ParseUser.logIn("leonardo", "cake");
@@ -50,28 +54,9 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
+        pager.setAdapter(new MainTabAdapter(getSupportFragmentManager()));
+        tabs.setupWithViewPager(pager);
 
-        categoryGridView =(GridView) findViewById(R.id.gridView);
-
-        ParseQuery<Category> CategoryParseQuery = new ParseQuery<Category>("Category");
-        CategoryParseQuery.findInBackground(new FindCallback<Category>() {
-            @Override
-            public void done(List<Category> list, ParseException e) {
-                Core.categories = (ArrayList)list;
-                CategoryAdapter adapter = new CategoryAdapter(MainActivity.this , Core.categories);
-                categoryGridView.setAdapter(adapter);
-
-            }
-        });
-
-        categoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Core.selectedCategory = Core.categories.get(position);
-                Intent i = new Intent(MainActivity.this , ChallengesActivity.class);
-                startActivity(i);
-            }
-        });
     }
 
     @Override

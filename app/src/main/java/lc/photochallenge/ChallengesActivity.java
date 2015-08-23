@@ -39,6 +39,7 @@ public class ChallengesActivity extends ActionBarActivity {
 
         ParseQuery<Challenge> CategoryParseQuery = new ParseQuery<Challenge>("Challenge");
         CategoryParseQuery.whereEqualTo("category" , Core.selectedCategory);
+        CategoryParseQuery.orderByAscending("name");
         CategoryParseQuery.findInBackground(new FindCallback<Challenge>() {
             @Override
             public void done(List<Challenge> list, ParseException e) {

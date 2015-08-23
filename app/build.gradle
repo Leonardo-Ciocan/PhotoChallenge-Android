@@ -31,6 +31,5 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.soundcloud.android:android-crop:1.0.0@aar'
-
-
+    compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
 }

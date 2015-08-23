@@ -30,6 +30,7 @@
         </activity>
         <activity
             android:name=".ChallengeActivity"
+            android:theme="@style/TranslucentBar"
             android:label="@string/title_activity_challenge" >
         </activity>
     </application>

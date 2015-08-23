@@ -1,10 +1,41 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     tools:context="lc.photochallenge.fragments.ChallengesFragment">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp">
+
+        <com.github.lzyzsd.circleprogress.CircleProgress
+            android:id="@+id/circle_progress"
+            android:layout_marginLeft="50dp"
+            android:layout_width="100dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="100dp"
+            custom:circle_progress="20"
+            custom:circle_finished_color="@color/brand"/>
+
+        <TextView
+
+            android:id="@+id/message"
+            android:textSize="30sp"
+            android:text="Get to work!"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:textColor="@color/brandDark"
+            android:layout_margin="25dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
     <GridView
-        android:layout_margin="15dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridView"
         android:layout_width="match_parent"

@@ -40,6 +40,14 @@ public class ChallengeActivity extends ActionBarActivity {
     @Bind(R.id.name)
     TextView name;
 
+    @Bind(R.id.category)
+    TextView category;
+
+    @Bind(R.id.difficulty)
+    TextView difficulty;
+
+
+
     Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,9 @@ public class ChallengeActivity extends ActionBarActivity {
                 }
             });
         }
+
+        category.setText(Core.selectedCategory.getName());
+        difficulty.setText(Core.selectedChallenge.getDifficulty()+"");
     }
 
     @OnClick(R.id.camera)

@@ -15,7 +15,6 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            app:tabMode="scrollable"
             />
 
     </android.support.design.widget.AppBarLayout>
