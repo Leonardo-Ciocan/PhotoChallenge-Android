@@ -12,6 +12,7 @@ import android.view.ViewParent;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,11 +21,14 @@ import java.util.List;
 import lc.photochallenge.adapter.CategoryAdapter;
 import lc.photochallenge.models.Category;
 import lc.photochallenge.models.Challenge;
+import lc.photochallenge.models.Submission;
 
 
 public class ChallengesActivity extends ActionBarActivity {
 
     public static SparseArray<ArrayList<Challenge>> Challenges = new SparseArray<ArrayList<Challenge>>();
+    public static HashMap<Challenge , Submission> Submissions = new HashMap<Challenge , Submission>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,18 +42,17 @@ public class ChallengesActivity extends ActionBarActivity {
 
 
         ParseQuery<Challenge> CategoryParseQuery = new ParseQuery<Challenge>("Challenge");
-        CategoryParseQuery.whereEqualTo("category" , Core.selectedCategory);
+        CategoryParseQuery.whereEqualTo("category", Core.selectedCategory);
         CategoryParseQuery.orderByAscending("name");
         CategoryParseQuery.findInBackground(new FindCallback<Challenge>() {
             @Override
             public void done(List<Challenge> list, ParseException e) {
-                for(Challenge c : list){
-                    if(Challenges.get(c.getDifficulty()) == null){
+                for (Challenge c : list) {
+                    if (Challenges.get(c.getDifficulty()) == null) {
                         ArrayList<Challenge> cs = new ArrayList<Challenge>();
                         cs.add(c);
-                        Challenges.put(c.getDifficulty() , cs);
-                    }
-                    else{
+                        Challenges.put(c.getDifficulty(), cs);
+                    } else {
                         Challenges.get(c.getDifficulty()).add(c);
                     }
                 }
@@ -58,6 +61,8 @@ public class ChallengesActivity extends ActionBarActivity {
                 tabs.setupWithViewPager(pager);
             }
         });
+
+
     }
 
     @Override

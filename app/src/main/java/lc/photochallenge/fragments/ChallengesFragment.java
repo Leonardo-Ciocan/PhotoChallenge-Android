@@ -16,8 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.CircleProgress;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,6 +32,7 @@ import lc.photochallenge.Core;
 import lc.photochallenge.R;
 import lc.photochallenge.adapter.ChallengeAdapter;
 import lc.photochallenge.models.Challenge;
+import lc.photochallenge.models.Submission;
 
 public class ChallengesFragment extends android.support.v4.app.Fragment {
 
@@ -85,6 +91,20 @@ public class ChallengesFragment extends android.support.v4.app.Fragment {
             }
         });
 
+        for(final Challenge c : ChallengesActivity.Challenges.get(getArguments().getInt("category"))){
+            ParseQuery<Submission> submissionParseQuery = new ParseQuery<Submission>("Submission");
+            submissionParseQuery.whereEqualTo("challenge" , c);
+            submissionParseQuery.whereEqualTo("user", ParseUser.getCurrentUser());
+            submissionParseQuery.findInBackground(new FindCallback<Submission>() {
+                @Override
+                public void done(List<Submission> list, ParseException e) {
+                    if(list != null && list.size()>0)
+                        ChallengesActivity.Submissions.put(c , list.get(0));
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+
         updateProgress();
 
         return v;
@@ -94,7 +114,7 @@ public class ChallengesFragment extends android.support.v4.app.Fragment {
         float completed = 0;
         ArrayList<Challenge> challenges = ChallengesActivity.Challenges.get(getArguments().getInt("category"));
         for(Challenge c : ChallengesActivity.Challenges.get(getArguments().getInt("category"))){
-            if(c.getSubmission() != null) completed++;
+            if(ChallengesActivity.Submissions.containsKey(c)) completed++;
         }
 
         int perc = Math.round(completed / ChallengesActivity.Challenges.get(getArguments().getInt("category")).size() * 100);

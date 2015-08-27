@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lc.photochallenge.models.Submission;
 
 
 public class ChallengeActivity extends ActionBarActivity {
@@ -57,8 +59,8 @@ public class ChallengeActivity extends ActionBarActivity {
         ButterKnife.bind(this);
         name.setText(Core.selectedChallenge.getName());
 
-        if( Core.selectedChallenge.getSubmission() != null){
-            Core.selectedChallenge.getSubmission().getDataInBackground(new GetDataCallback() {
+        if( ChallengesActivity.Submissions.containsKey(Core.selectedChallenge)){
+            ChallengesActivity.Submissions.get(Core.selectedChallenge).getPhoto().getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] bytes, ParseException e) {
                     image.setBackground(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
@@ -67,7 +69,7 @@ public class ChallengeActivity extends ActionBarActivity {
         }
 
         category.setText(Core.selectedCategory.getName());
-        difficulty.setText(Core.selectedChallenge.getDifficulty()+"");
+        difficulty.setText(DifficultyTabAdapter.difficulties[Core.selectedChallenge.getDifficulty()]);
     }
 
     @OnClick(R.id.camera)
@@ -124,8 +126,20 @@ public class ChallengeActivity extends ActionBarActivity {
 
                 ParseFile file = new ParseFile("image.png" , byteArray);
                 file.saveInBackground();
-                Core.selectedChallenge.setSubmission(file);
-                Core.selectedChallenge.saveInBackground();
+
+                if(ChallengesActivity.Submissions.containsKey(Core.selectedChallenge)){
+                    ChallengesActivity.Submissions.get(Core.selectedChallenge).setPhoto(file);
+                    ChallengesActivity.Submissions.get(Core.selectedChallenge).saveInBackground();
+                }
+                else{
+                    Submission submission = new Submission();
+                    submission.setFrom(ParseUser.getCurrentUser());
+                    submission.setChallenge(Core.selectedChallenge);
+                    submission.setPhoto(file);
+                    submission.saveInBackground();
+
+                    ChallengesActivity.Submissions.put(Core.selectedChallenge, submission);
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();

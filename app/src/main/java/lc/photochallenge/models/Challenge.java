@@ -21,8 +21,4 @@ public class Challenge extends ParseObject{
     public int getDifficulty(){
         return getInt("difficulty");
     }
-
-    public ParseFile getSubmission(){return getParseFile("submission");}
-
-    public void setSubmission(ParseFile file){put("submission",file);}
 }

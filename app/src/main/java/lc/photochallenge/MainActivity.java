@@ -37,24 +37,15 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ParseObject.registerSubclass(Category.class);
-        ParseObject.registerSubclass(Challenge.class);
-        Parse.enableLocalDatastore(this);
-
-        Parse.initialize(this, "rfZD68sm4TmS4ji5gU84zhUPTLeLNOzZqE5UohVf", "hacFfKe0uj0waYXWXRIMBTzZ0VOFrLh5sex4ky8E");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final ViewPager pager = (ViewPager)findViewById(R.id.pager);
         final TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
 
-        try {
-            ParseUser.logIn("leonardo", "cake");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        pager.setAdapter(new MainTabAdapter(getSupportFragmentManager()));
+
+        pager.setAdapter(new MainTabAdapter(getSupportFragmentManager() , this));
         tabs.setupWithViewPager(pager);
 
     }

@@ -8,7 +8,7 @@ import lc.photochallenge.fragments.ChallengesFragment;
 
 
 public class DifficultyTabAdapter extends FragmentStatePagerAdapter {
-    String[] difficulties = new String[]{"Easy" , "Moderate" , "Hard"};
+    public static String[] difficulties = new String[]{"Easy" , "Moderate" , "Hard"};
     public DifficultyTabAdapter(FragmentManager fm) {
         super(fm);
     }

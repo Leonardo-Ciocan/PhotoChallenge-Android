@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lc.photochallenge.ChallengeActivity;
+import lc.photochallenge.ChallengesActivity;
 import lc.photochallenge.Core;
 import lc.photochallenge.R;
 import lc.photochallenge.SquareView;
@@ -48,15 +51,27 @@ public class ChallengeAdapter extends ArrayAdapter<Challenge> {
 
         name.setText(getItem(position).getName());
 
-        if( selectedChallenge.getSubmission() != null){
-            byte[] bytes = new byte[0];
-            try {
-                bytes = selectedChallenge.getSubmission().getData();
-                image.setBackground(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
-
-            } catch (ParseException e) {
-                e.printStackTrace();
+        if(ChallengesActivity.Submissions.containsKey(getItem(position))){
+            if(! ChallengesActivity.Submissions.get(getItem(position)).getPhoto().isDataAvailable()){
+                ChallengesActivity.Submissions.get(getItem(position)).getPhoto().getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] bytes, ParseException e) {
+                        image.setBackground(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
+                        Toast.makeText(getContext() , "done",Toast.LENGTH_LONG).show();
+                    }
+                });
             }
+            else{
+                byte[] bytes;
+                try {
+                    bytes =  ChallengesActivity.Submissions.get(getItem(position)).getPhoto().getData();
+                    image.setBackground(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
 
         return convertView;
