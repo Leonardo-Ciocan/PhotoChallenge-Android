@@ -10,4 +10,5 @@
     <string name="title_activity_picker">PickerActivity</string>
     <string name="title_activity_challenge">ChallengeActivity</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_following_pics">FollowingPicsActivity</string>
 </resources>

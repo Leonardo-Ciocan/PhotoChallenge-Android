@@ -17,12 +17,9 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lc.photochallenge.ChallengeActivity;
-import lc.photochallenge.ChallengesActivity;
 import lc.photochallenge.Core;
 import lc.photochallenge.R;
 import lc.photochallenge.SquareView;
-import lc.photochallenge.models.Category;
 import lc.photochallenge.models.Challenge;
 
 /**
@@ -51,9 +48,9 @@ public class ChallengeAdapter extends ArrayAdapter<Challenge> {
 
         name.setText(getItem(position).getName());
 
-        if(ChallengesActivity.Submissions.containsKey(getItem(position))){
-            if(! ChallengesActivity.Submissions.get(getItem(position)).getPhoto().isDataAvailable()){
-                ChallengesActivity.Submissions.get(getItem(position)).getPhoto().getDataInBackground(new GetDataCallback() {
+        if(Core.Submissions.containsKey(getItem(position))){
+            if(! Core.Submissions.get(getItem(position)).getPhoto().isDataAvailable()){
+                Core.Submissions.get(getItem(position)).getPhoto().getDataInBackground(new GetDataCallback() {
                     @Override
                     public void done(byte[] bytes, ParseException e) {
                         image.setBackground(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
@@ -64,7 +61,7 @@ public class ChallengeAdapter extends ArrayAdapter<Challenge> {
             else{
                 byte[] bytes;
                 try {
-                    bytes =  ChallengesActivity.Submissions.get(getItem(position)).getPhoto().getData();
+                    bytes =  Core.Submissions.get(getItem(position)).getPhoto().getData();
                     image.setBackground(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
 
                 } catch (ParseException e) {

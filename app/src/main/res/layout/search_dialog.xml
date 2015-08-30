@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fff"
-    android:padding="40dp">
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@drawable/dialog_background">
 
+    <TextView
+        android:text="Follow someone"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:textSize="30sp"
+        android:textColor="#fff"
+        android:padding="10dp"
+        android:layout_height="wrap_content" />
     <EditText
-        android:hint="Search for user"
+        android:hint="Enter username or name"
         android:id="@id/name"
+        android:textColorHint="#fff"
+        android:textColor="#fff"
+
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
     <Button
+        android:background="@color/brandDark"
         android:text="Follow"
         android:id="@+id/follow"
+        android:textColor="#fff"
         android:layout_margin="5dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />

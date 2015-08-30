@@ -1,20 +1,15 @@
 package lc.photochallenge.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -27,7 +22,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lc.photochallenge.ChallengeActivity;
-import lc.photochallenge.ChallengesActivity;
 import lc.photochallenge.Core;
 import lc.photochallenge.R;
 import lc.photochallenge.adapter.ChallengeAdapter;
@@ -72,7 +66,7 @@ public class ChallengesFragment extends android.support.v4.app.Fragment {
     TextView message;
 
     @Bind(R.id.circle_progress)
-    CircleProgress circleProgress;
+    ArcProgress circleProgress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,18 +74,18 @@ public class ChallengesFragment extends android.support.v4.app.Fragment {
 
         View v =  inflater.inflate(R.layout.fragment_challenges, container, false);
         ButterKnife.bind(this, v);
-        adapter = new ChallengeAdapter(getActivity(), ChallengesActivity.Challenges.get(getArguments().getInt("category")));
+        adapter = new ChallengeAdapter(getActivity(), Core.Challenges.get(getArguments().getInt("category")));
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Core.selectedChallenge = ChallengesActivity.Challenges.get(getArguments().getInt("category")).get(position);
+                Core.selectedChallenge = Core.Challenges.get(getArguments().getInt("category")).get(position);
                 Intent i = new Intent(getActivity(), ChallengeActivity.class);
                 startActivity(i);
             }
         });
 
-        for(final Challenge c : ChallengesActivity.Challenges.get(getArguments().getInt("category"))){
+        for(final Challenge c : Core.Challenges.get(getArguments().getInt("category"))){
             ParseQuery<Submission> submissionParseQuery = new ParseQuery<Submission>("Submission");
             submissionParseQuery.whereEqualTo("challenge" , c);
             submissionParseQuery.whereEqualTo("user", ParseUser.getCurrentUser());
@@ -99,25 +93,26 @@ public class ChallengesFragment extends android.support.v4.app.Fragment {
                 @Override
                 public void done(List<Submission> list, ParseException e) {
                     if(list != null && list.size()>0)
-                        ChallengesActivity.Submissions.put(c , list.get(0));
+                        Core.Submissions.put(c , list.get(0));
                     adapter.notifyDataSetChanged();
+
+                    updateProgress();
                 }
             });
         }
 
-        updateProgress();
 
         return v;
     }
 
     void updateProgress(){
         float completed = 0;
-        ArrayList<Challenge> challenges = ChallengesActivity.Challenges.get(getArguments().getInt("category"));
-        for(Challenge c : ChallengesActivity.Challenges.get(getArguments().getInt("category"))){
-            if(ChallengesActivity.Submissions.containsKey(c)) completed++;
+        ArrayList<Challenge> challenges = Core.Challenges.get(getArguments().getInt("category"));
+        for(Challenge c : Core.Challenges.get(getArguments().getInt("category"))){
+            if(Core.Submissions.containsKey(c)) completed++;
         }
 
-        int perc = Math.round(completed / ChallengesActivity.Challenges.get(getArguments().getInt("category")).size() * 100);
+        int perc = Math.round(completed / Core.Challenges.get(getArguments().getInt("category")).size() * 100);
         circleProgress.setProgress(perc);
 
 

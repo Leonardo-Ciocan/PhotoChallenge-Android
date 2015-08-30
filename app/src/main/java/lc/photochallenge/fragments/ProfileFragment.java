@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -30,10 +32,11 @@ import lc.photochallenge.models.Category;
 
 public class ProfileFragment  extends android.support.v4.app.Fragment {
 
-
+    public static ProfileFragment profileFragment;
 
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
+        profileFragment = fragment;
         return fragment;
     }
 
@@ -55,6 +58,9 @@ public class ProfileFragment  extends android.support.v4.app.Fragment {
     @Bind(R.id.username)
     TextView username;
 
+    @Bind(R.id.progress)
+    ArcProgress progress;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,11 +75,16 @@ public class ProfileFragment  extends android.support.v4.app.Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    ParseUser.getCurrentUser().put("name" , name.getText().toString());
+                    ParseUser.getCurrentUser().put("name", name.getText().toString());
                     ParseUser.getCurrentUser().saveInBackground();
                 }
             }
         });
+        updateProgress();
         return v;
+    }
+
+    public void updateProgress(){
+        progress.setProgress((int)((float)Core.completedChallenges / Core.totalChallenges * 100));
     }
 }

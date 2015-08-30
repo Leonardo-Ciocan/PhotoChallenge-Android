@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="#fff"
@@ -30,5 +31,70 @@
             android:textColor="@color/brand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_marginTop="50dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <lc.photochallenge.SquareView
+                android:layout_margin="5dp"
+                android:background="@drawable/dialog_background"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <com.github.lzyzsd.circleprogress.ArcProgress
+                    android:id="@+id/progress"
+                    android:layout_gravity="center"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    custom:arc_progress="55"
+                    android:layout_margin="10dp"
+                    custom:arc_finished_color="#fff"
+                    custom:arc_unfinished_color="#30000000"
+                    custom:arc_text_color="#fff"
+                    custom:arc_bottom_text_size="11sp"
+                    custom:arc_stroke_width="25dp"/>
+            </lc.photochallenge.SquareView>
+
+            <lc.photochallenge.SquareView
+                android:layout_margin="5dp"
+                android:background="@drawable/dialog_background"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <FrameLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/followers"
+                        android:textColor="#fff"
+                        android:textSize="40sp"
+                        android:text="22"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textColor="#fff"
+                        android:textSize="30sp"
+                        android:text="followers"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                </FrameLayout>
+            </lc.photochallenge.SquareView>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 </LinearLayout>

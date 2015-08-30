@@ -3,6 +3,7 @@ package lc.photochallenge;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -12,6 +13,8 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,6 +61,14 @@ public class LoginActivity extends ActionBarActivity {
 
         Parse.initialize(this, "rfZD68sm4TmS4ji5gU84zhUPTLeLNOzZqE5UohVf", "hacFfKe0uj0waYXWXRIMBTzZ0VOFrLh5sex4ky8E");
 
+
+        Core.selectedChallenge = null;
+        Core.selectedCategory = null;
+        Core.submissions=null;
+        Core.friends = null;
+        Core.categories = null;
+        Core.Submissions = new HashMap<>();
+        Core.Challenges = new SparseArray<>();
 
         setContentView(R.layout.activity_login);
 

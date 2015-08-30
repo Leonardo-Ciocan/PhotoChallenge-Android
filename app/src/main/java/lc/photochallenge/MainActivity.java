@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -27,6 +28,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lc.photochallenge.adapter.CategoryAdapter;
+import lc.photochallenge.fragments.FriendsFragment;
+import lc.photochallenge.fragments.ProfileFragment;
 import lc.photochallenge.models.Category;
 import lc.photochallenge.models.Challenge;
 
@@ -45,8 +48,29 @@ public class MainActivity extends ActionBarActivity {
 
 
 
-        pager.setAdapter(new MainTabAdapter(getSupportFragmentManager() , this));
+        pager.setAdapter(new MainTabAdapter(getSupportFragmentManager(), this));
         tabs.setupWithViewPager(pager);
+
+        ParseQuery query = new ParseQuery("Challenge");
+        query.countInBackground(new CountCallback() {
+            @Override
+            public void done(int i, ParseException e) {
+                Core.totalChallenges = i;
+
+                ParseQuery query2 = new ParseQuery("Submission");
+                query2.whereEqualTo("user",ParseUser.getCurrentUser());
+                query2.countInBackground(new CountCallback() {
+                    @Override
+                    public void done(int i, ParseException e) {
+                        Core.completedChallenges = i;
+                        if(ProfileFragment.profileFragment!=null)
+                            ProfileFragment.profileFragment.updateProgress();
+                    }
+                });
+            }
+        });
+
+
 
     }
 

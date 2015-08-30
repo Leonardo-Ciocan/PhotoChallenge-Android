@@ -10,6 +10,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.CircleProgress;
+import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -28,6 +29,7 @@ import lc.photochallenge.adapter.CategoryAdapter;
 import lc.photochallenge.adapter.ChallengeAdapter;
 import lc.photochallenge.models.Category;
 import lc.photochallenge.models.Challenge;
+import lc.photochallenge.models.Submission;
 
 public class CategoriesFragment extends android.support.v4.app.Fragment {
 
@@ -63,8 +65,32 @@ public class CategoriesFragment extends android.support.v4.app.Fragment {
             @Override
             public void done(List<Category> list, ParseException e) {
                 Core.categories = (ArrayList)list;
-                CategoryAdapter adapter = new CategoryAdapter(getActivity() , Core.categories);
+                final CategoryAdapter adapter = new CategoryAdapter(getActivity() , Core.categories);
                 categoryGridView.setAdapter(adapter);
+
+                for(final Category c : Core.categories){
+                    ParseQuery<Challenge> challengeParseQuery = new ParseQuery<Challenge>("Challenge");
+                    challengeParseQuery.whereEqualTo("category", c);
+
+                    final ParseQuery<Submission> submissionParseQuery = new ParseQuery<Submission>("Submission");
+                    submissionParseQuery.whereMatchesQuery("challenge", challengeParseQuery);
+
+
+                        challengeParseQuery.countInBackground(new CountCallback() {
+                            @Override
+                            public void done(final int i, ParseException e) {
+                                submissionParseQuery.countInBackground(new CountCallback() {
+                                    @Override
+                                    public void done(int i2, ParseException e) {
+                                        float a = (float) i2 / i * 100;
+                                        c.setProgress((int)a);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
+                        });
+
+                }
 
             }
         });

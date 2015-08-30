@@ -9,19 +9,10 @@
     <LinearLayout
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="120dp">
 
-        <com.github.lzyzsd.circleprogress.CircleProgress
-            android:id="@+id/circle_progress"
-            android:layout_marginLeft="50dp"
-            android:layout_width="100dp"
-
-            android:layout_gravity="center_vertical"
-            android:layout_height="100dp"
-            custom:circle_progress="20"
-            custom:circle_finished_color="@color/brand"/>
 
         <TextView
             android:fontFamily="sans-serif-thin"
@@ -32,6 +23,10 @@
             android:layout_width="wrap_content"
             android:textColor="@color/brandDark"
             android:layout_margin="25dp"
+            android:layout_height="wrap_content" />
+        <ProgressBar
+            android:layout_width="fill_parent"
+            android:id="@+id/circle_progress"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <GridView

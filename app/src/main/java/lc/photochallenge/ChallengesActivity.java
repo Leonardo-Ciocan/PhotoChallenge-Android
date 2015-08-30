@@ -4,43 +4,36 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.SparseArray;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewParent;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import lc.photochallenge.adapter.CategoryAdapter;
-import lc.photochallenge.models.Category;
 import lc.photochallenge.models.Challenge;
-import lc.photochallenge.models.Submission;
 
 
 public class ChallengesActivity extends ActionBarActivity {
-
-    public static SparseArray<ArrayList<Challenge>> Challenges = new SparseArray<ArrayList<Challenge>>();
-    public static HashMap<Challenge , Submission> Submissions = new HashMap<Challenge , Submission>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenges);
-        Challenges.clear();
+        Core.Challenges.clear();
 
         final ViewPager pager = (ViewPager)findViewById(R.id.pager);
         final TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final TextView toolbar_title = (TextView) findViewById(R.id.toolbar_title);
 
 
-
-
+        Core.Challenges.clear();
         ParseQuery<Challenge> CategoryParseQuery = new ParseQuery<Challenge>("Challenge");
         CategoryParseQuery.whereEqualTo("category", Core.selectedCategory);
         CategoryParseQuery.orderByAscending("name");
@@ -48,12 +41,12 @@ public class ChallengesActivity extends ActionBarActivity {
             @Override
             public void done(List<Challenge> list, ParseException e) {
                 for (Challenge c : list) {
-                    if (Challenges.get(c.getDifficulty()) == null) {
+                    if (Core.Challenges.get(c.getDifficulty()) == null) {
                         ArrayList<Challenge> cs = new ArrayList<Challenge>();
                         cs.add(c);
-                        Challenges.put(c.getDifficulty(), cs);
+                        Core.Challenges.put(c.getDifficulty(), cs);
                     } else {
-                        Challenges.get(c.getDifficulty()).add(c);
+                        Core.Challenges.get(c.getDifficulty()).add(c);
                     }
                 }
 
@@ -62,7 +55,9 @@ public class ChallengesActivity extends ActionBarActivity {
             }
         });
 
-
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        toolbar_title.setText(Core.selectedCategory.getName());
     }
 
     @Override

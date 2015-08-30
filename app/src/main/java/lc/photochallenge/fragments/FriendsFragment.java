@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -19,6 +21,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lc.photochallenge.Core;
 import lc.photochallenge.R;
 import lc.photochallenge.SearchUserDialog;
 import lc.photochallenge.adapter.FollowingAdapter;
@@ -47,7 +50,8 @@ public class FriendsFragment   extends android.support.v4.app.Fragment {
 
 
     @Bind(R.id.following)
-    ListView followingList;
+    GridView followingList;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +65,7 @@ public class FriendsFragment   extends android.support.v4.app.Fragment {
         followParseQuery.findInBackground(new FindCallback<Follow>() {
             @Override
             public void done(List<Follow> list, ParseException e) {
+                Core.friends = list;
                 adapter = new FollowingAdapter(getActivity(), (ArrayList) list);
                 followingList.setAdapter(adapter);
             }

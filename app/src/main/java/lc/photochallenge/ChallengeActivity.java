@@ -11,19 +11,24 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FunctionCallback;
 import com.parse.GetDataCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.r0adkll.slidr.Slidr;
 import com.soundcloud.android.crop.Crop;
+
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +53,8 @@ public class ChallengeActivity extends ActionBarActivity {
     @Bind(R.id.difficulty)
     TextView difficulty;
 
+    @Bind(R.id.followingSubs)
+    TextView followingSubs;
 
 
     Bitmap bitmap;
@@ -56,11 +63,12 @@ public class ChallengeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge);
 
+        Slidr.attach(this);
         ButterKnife.bind(this);
         name.setText(Core.selectedChallenge.getName());
 
-        if( ChallengesActivity.Submissions.containsKey(Core.selectedChallenge)){
-            ChallengesActivity.Submissions.get(Core.selectedChallenge).getPhoto().getDataInBackground(new GetDataCallback() {
+        if( Core.Submissions.containsKey(Core.selectedChallenge)){
+            Core.Submissions.get(Core.selectedChallenge).getPhoto().getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] bytes, ParseException e) {
                     image.setBackground(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
@@ -68,8 +76,29 @@ public class ChallengeActivity extends ActionBarActivity {
             });
         }
 
+        final HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("challenge", Core.selectedChallenge.getObjectId());
+        params.put("user", ParseUser.getCurrentUser().getObjectId());
+        ParseCloud.callFunctionInBackground("followingSubmissions", params, new FunctionCallback<Integer>() {
+
+            @Override
+            public void done(Integer integer, ParseException e) {
+                    if (e == null) {
+                        followingSubs.setText(integer + " friends have submissions");
+                    }
+                else{
+                        e.printStackTrace();
+                    }
+            }
+        });
         category.setText(Core.selectedCategory.getName());
         difficulty.setText(DifficultyTabAdapter.difficulties[Core.selectedChallenge.getDifficulty()]);
+    }
+
+    @OnClick(R.id.following_pics)
+    void pics(){
+        Intent i = new Intent( this , FollowingPicsActivity.class );
+        startActivity(i);
     }
 
     @OnClick(R.id.camera)
@@ -127,9 +156,9 @@ public class ChallengeActivity extends ActionBarActivity {
                 ParseFile file = new ParseFile("image.png" , byteArray);
                 file.saveInBackground();
 
-                if(ChallengesActivity.Submissions.containsKey(Core.selectedChallenge)){
-                    ChallengesActivity.Submissions.get(Core.selectedChallenge).setPhoto(file);
-                    ChallengesActivity.Submissions.get(Core.selectedChallenge).saveInBackground();
+                if(Core.Submissions.containsKey(Core.selectedChallenge)){
+                    Core.Submissions.get(Core.selectedChallenge).setPhoto(file);
+                    Core.Submissions.get(Core.selectedChallenge).saveInBackground();
                 }
                 else{
                     Submission submission = new Submission();
@@ -138,7 +167,7 @@ public class ChallengeActivity extends ActionBarActivity {
                     submission.setPhoto(file);
                     submission.saveInBackground();
 
-                    ChallengesActivity.Submissions.put(Core.selectedChallenge, submission);
+                    Core.Submissions.put(Core.selectedChallenge, submission);
                 }
 
             } catch (IOException e) {

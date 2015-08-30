@@ -2,6 +2,7 @@ package lc.photochallenge;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Adapter;
@@ -45,6 +46,9 @@ public class SearchUserDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.search_dialog);
+
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
         ButterKnife.bind(this);
     }
 
