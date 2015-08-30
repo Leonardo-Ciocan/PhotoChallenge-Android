@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.github.lzyzsd.circleprogress.DonutProgress;
+import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -22,9 +23,11 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import lc.photochallenge.ChallengesActivity;
 import lc.photochallenge.Core;
+import lc.photochallenge.LoginActivity;
 import lc.photochallenge.R;
 import lc.photochallenge.adapter.CategoryAdapter;
 import lc.photochallenge.adapter.ChallengeAdapter;
@@ -61,6 +64,9 @@ public class ProfileFragment  extends android.support.v4.app.Fragment {
     @Bind(R.id.progress)
     ArcProgress progress;
 
+    @Bind(R.id.followers)
+    TextView followers;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,11 +86,30 @@ public class ProfileFragment  extends android.support.v4.app.Fragment {
                 }
             }
         });
+
+        ParseQuery query = new ParseQuery("Follow");
+        query.whereEqualTo("following" , ParseUser.getCurrentUser());
+        query.countInBackground(new CountCallback() {
+            @Override
+            public void done(int i, ParseException e) {
+                followers.setText(i+"");
+            }
+        });
+
         updateProgress();
         return v;
     }
 
     public void updateProgress(){
-        progress.setProgress((int)((float)Core.completedChallenges / Core.totalChallenges * 100));
+        progress.setProgress((int) ((float) Core.completedChallenges / Core.totalChallenges * 100));
+    }
+
+    @OnClick(R.id.logout)
+    void logout(){
+        ParseUser.logOut();
+        Intent i = new Intent(getActivity() , LoginActivity.class);
+        startActivity(i);
+        getActivity().finish();
+
     }
 }

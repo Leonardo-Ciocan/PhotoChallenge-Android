@@ -32,6 +32,7 @@ public class FriendsFragment   extends android.support.v4.app.Fragment {
 
     private SearchUserDialog dialog;
     private FollowingAdapter adapter;
+    private View v;
 
     public static FriendsFragment newInstance() {
         FriendsFragment fragment = new FriendsFragment();
@@ -57,7 +58,7 @@ public class FriendsFragment   extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v =  inflater.inflate(R.layout.fragment_friends, container, false);
+        v = inflater.inflate(R.layout.fragment_friends, container, false);
         ButterKnife.bind(this, v);
 
         ParseQuery<Follow> followParseQuery = new ParseQuery<Follow>("Follow");
@@ -78,7 +79,7 @@ public class FriendsFragment   extends android.support.v4.app.Fragment {
     @OnClick(R.id.search)
     public void showDialog(){
         if(dialog == null){
-            dialog = new SearchUserDialog(getActivity(),adapter);
+            dialog = new SearchUserDialog(getActivity(),adapter,v);
         }
         dialog.clear();
         dialog.show();

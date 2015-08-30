@@ -1,5 +1,6 @@
 package lc.photochallenge.fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
@@ -66,7 +69,7 @@ public class ChallengesFragment extends android.support.v4.app.Fragment {
     TextView message;
 
     @Bind(R.id.circle_progress)
-    ArcProgress circleProgress;
+    ProgressBar circleProgress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,8 +83,12 @@ public class ChallengesFragment extends android.support.v4.app.Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Core.selectedChallenge = Core.Challenges.get(getArguments().getInt("category")).get(position);
-                Intent i = new Intent(getActivity(), ChallengeActivity.class);
-                startActivity(i);
+                //Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                //startActivity(i);
+                ImageView cardImage = (ImageView) view.findViewById(R.id.img);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), cardImage, "cardImage");
+                Intent intent = new Intent(getActivity(), ChallengeActivity.class);
+                getActivity().startActivity(intent, options.toBundle());
             }
         });
 

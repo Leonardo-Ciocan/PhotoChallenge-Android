@@ -11,6 +11,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +26,8 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.r0adkll.slidr.Slidr;
 import com.soundcloud.android.crop.Crop;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -42,7 +48,7 @@ public class ChallengeActivity extends ActionBarActivity {
     FloatingActionButton camera;
 
     @Bind(R.id.squareView)
-    SquareView image;
+    ImageView image;
 
     @Bind(R.id.name)
     TextView name;
@@ -56,24 +62,47 @@ public class ChallengeActivity extends ActionBarActivity {
     @Bind(R.id.followingSubs)
     TextView followingSubs;
 
+    @Bind(R.id.following_pics)
+    LinearLayout following_pics;
 
     Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge);
-
+        postponeEnterTransition();
         Slidr.attach(this);
         ButterKnife.bind(this);
         name.setText(Core.selectedChallenge.getName());
 
         if( Core.Submissions.containsKey(Core.selectedChallenge)){
-            Core.Submissions.get(Core.selectedChallenge).getPhoto().getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] bytes, ParseException e) {
-                    image.setBackground(new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
-                }
-            });
+            Submission s = Core.Submissions.get(Core.selectedChallenge);
+            if(s.getPhoto().getUrl().equals("")) {
+                s.getPhoto().getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] bytes, ParseException e) {
+                        image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                        scheduleStartPostponedTransition(image);
+                    }
+                });
+            }
+            else {
+                Picasso.with(this).load(s.getPhoto().getUrl()).into(image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        scheduleStartPostponedTransition(image);
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+
+            }
+        }
+        else{
+            scheduleStartPostponedTransition(image);
         }
 
         final HashMap<String, Object> params = new HashMap<String, Object>();
@@ -84,6 +113,8 @@ public class ChallengeActivity extends ActionBarActivity {
             @Override
             public void done(Integer integer, ParseException e) {
                     if (e == null) {
+                        if(integer == 0) return;
+                        following_pics.setVisibility(View.VISIBLE);
                         followingSubs.setText(integer + " friends have submissions");
                     }
                 else{
@@ -148,7 +179,7 @@ public class ChallengeActivity extends ActionBarActivity {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Crop.getOutput(result));
                 image.setBackground(new BitmapDrawable(bitmap));
-
+                if(bitmap.getWidth() > 800)bitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
@@ -176,6 +207,37 @@ public class ChallengeActivity extends ActionBarActivity {
         } else if (resultCode == Crop.RESULT_ERROR) {
             Toast.makeText(this, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+
+    }
+
+    @Override
+    public void finishAfterTransition() {
+        super.finishAfterTransition();
+
+    }
+
+    private void scheduleStartPostponedTransition(final View sharedElement) {
+        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+                        startPostponedEnterTransition();
+                        /*camera.animate().setStartDelay(2500).translationY(0).alpha(1).setDuration(3000).withStartAction(new Runnable() {
+                            public void run() {
+                                camera.setTranslationY(1500);
+                                camera.setAlpha(0);
+                                // do something
+                            }
+                        }).start();*/
+                        return true;
+                    }
+                });
     }
 
 }

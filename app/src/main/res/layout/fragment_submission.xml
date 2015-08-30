@@ -7,10 +7,15 @@
     android:layout_height="match_parent"
     tools:context="lc.photochallenge.fragments.SubmissionFragment">
     <lc.photochallenge.SquareView
-        android:id="@+id/squareView"
         android:background="#939393"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent" >
+        <ImageView
+
+            android:id="@+id/squareView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </lc.photochallenge.SquareView>
 
 
 

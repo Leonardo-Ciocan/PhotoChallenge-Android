@@ -16,6 +16,12 @@
         <!-- You can also set colorControlNormal, colorControlActivated
              colorControlHighlight, and colorSwitchThumbNormal. -->
 
+        <item name="android:windowContentTransitions">true</item>
+
+        <!-- enable overlapping of exiting and entering activities-->
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+
     </style>
     <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
 
@@ -37,8 +43,8 @@
     </style>
 
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
-        <item name="android:textColor">#5c000000</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">#bc000000</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
@@ -54,4 +60,5 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:maxHeight">20dip</item>
     </style>
+
 </resources>

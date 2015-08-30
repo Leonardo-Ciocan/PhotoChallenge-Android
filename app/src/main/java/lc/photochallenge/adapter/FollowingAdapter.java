@@ -2,6 +2,7 @@ package lc.photochallenge.adapter;
 
 import android.content.Context;
 import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,6 +47,7 @@ public class FollowingAdapter   extends ArrayAdapter<Follow> {
     @Bind(R.id.progress)
     ProgressBar progress;
 
+    HashMap<ParseUser , Integer> progresses = new HashMap<>();
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -56,7 +59,7 @@ public class FollowingAdapter   extends ArrayAdapter<Follow> {
 
         ButterKnife.bind(this, convertView);
 
-        ParseUser user = getItem(position).getTo();
+        final ParseUser user = getItem(position).getTo();
         try {
             user.fetchIfNeeded();
         } catch (ParseException e) {
@@ -65,15 +68,21 @@ public class FollowingAdapter   extends ArrayAdapter<Follow> {
         name.setText(user.getString("name"));
         username.setText(user.getUsername());
 
+        if(progresses.containsKey(user)){
+            progress.setProgress(progresses.get(user));
+        }
+        else{
+            ParseQuery query2 = new ParseQuery("Submission");
+            query2.whereEqualTo("user", user);
+            query2.countInBackground(new CountCallback() {
+                @Override
+                public void done(int i, ParseException e) {
+                    progresses.put(user, (int) ((float) i / Core.totalChallenges * 100));
+                    notifyDataSetChanged();
+                }
+            });
+        }
 
-        ParseQuery query2 = new ParseQuery("Submission");
-        query2.whereEqualTo("user", user);
-        query2.countInBackground(new CountCallback() {
-            @Override
-            public void done(int i, ParseException e) {
-                progress.setProgress((int)((float)i / Core.totalChallenges * 100));
-            }
-        });
 
         return convertView;
     }

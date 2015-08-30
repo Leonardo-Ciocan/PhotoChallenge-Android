@@ -53,15 +53,8 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ParseObject.registerSubclass(Category.class);
-        ParseObject.registerSubclass(Submission.class);
-        ParseObject.registerSubclass(Follow.class);
-        ParseObject.registerSubclass(Challenge.class);
-        Parse.enableLocalDatastore(this);
 
-        Parse.initialize(this, "rfZD68sm4TmS4ji5gU84zhUPTLeLNOzZqE5UohVf", "hacFfKe0uj0waYXWXRIMBTzZ0VOFrLh5sex4ky8E");
-
-
+       
         Core.selectedChallenge = null;
         Core.selectedCategory = null;
         Core.submissions=null;

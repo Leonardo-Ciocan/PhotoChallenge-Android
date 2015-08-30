@@ -19,7 +19,8 @@
         android:id="@id/name"
         android:textColorHint="#fff"
         android:textColor="#fff"
-
+        android:padding="15dp"
+        android:background="@color/brandDark"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 

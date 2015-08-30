@@ -2,17 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    android:padding="10dp"
     tools:context="lc.photochallenge.LoginActivity">
 <LinearLayout
+    android:layout_margin="10dp"
+    android:paddingTop="100dp"
+    android:background="#fff"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
     <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
+
+            android:textColorHint="#fff"
+            android:textColor="#fff"
+            android:padding="15dp"
+            android:background="@color/brand"
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,9 +28,16 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
+
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
+
+            android:textColorHint="#fff"
+            android:textColor="#fff"
+            android:padding="15dp"
+            android:background="@color/brand"
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,12 +45,19 @@
             android:hint="Password"/>
     </android.support.design.widget.TextInputLayout>
 
+
+
+
+</LinearLayout>
+
     <Button
+        android:layout_gravity="bottom"
+        android:layout_marginTop="30dp"
+        android:layout_margin="10dp"
+        android:textColor="#fff"
+        android:background="@color/brandDark"
         android:id="@+id/login"
         android:text="Login"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-
-
-</LinearLayout>
 </FrameLayout>

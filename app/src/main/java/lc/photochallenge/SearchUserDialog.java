@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.view.Window;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
@@ -29,12 +31,14 @@ import lc.photochallenge.adapter.FollowingAdapter;
 import lc.photochallenge.models.Follow;
 
 public class SearchUserDialog extends Dialog {
+    private final View parent;
     public Activity c;
 
     public FollowingAdapter adapter;
-    public SearchUserDialog(Activity a , FollowingAdapter adapter) {
+    public SearchUserDialog(Activity a , FollowingAdapter adapter , View parent) {
         super(a);
         this.c = a;
+        this.parent = parent;
         this.adapter = adapter;
     }
 
@@ -77,7 +81,9 @@ public class SearchUserDialog extends Dialog {
                                                             } else {
                                                                 {
                                                                     SearchUserDialog.this.dismiss();
-                                                                    Toast.makeText(getContext(), "You're already following this user", Toast.LENGTH_LONG).show();
+                                                                    Snackbar
+                                                                            .make(parent, "You're already following this user", Snackbar.LENGTH_LONG)
+                                                                            .show();
                                                                 }
                                                             }
                                                         }
@@ -86,7 +92,9 @@ public class SearchUserDialog extends Dialog {
 
                 } else {
                     SearchUserDialog.this.dismiss();
-                    Toast.makeText(getContext(), "That user doesnt exist", Toast.LENGTH_LONG).show();
+                    Snackbar
+                            .make(parent, "There is no user with that name", Snackbar.LENGTH_LONG)
+                            .show();
                 }
             }
         });

@@ -10,15 +10,22 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         <FrameLayout
-            android:id="@+id/img"
-            android:elevation="5dp"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
+            <ImageView
+                android:id="@+id/img"
+
+                android:transitionName="cardImage"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+            </ImageView>
             <TextView
                 android:id="@+id/name"
                 android:layout_gravity="bottom"
-                android:background="#d3ffffff"
-                android:textColor="#df000000"
+                android:background="@color/brand"
+                android:alpha="0.75"
+                android:textColor="#fff"
                 android:padding="10dp"
                 android:textAlignment="center"
                 android:gravity="bottom|center"

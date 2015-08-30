@@ -2,6 +2,7 @@ package lc.photochallenge.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +76,7 @@ public class CategoriesFragment extends android.support.v4.app.Fragment {
 
                     final ParseQuery<Submission> submissionParseQuery = new ParseQuery<Submission>("Submission");
                     submissionParseQuery.whereMatchesQuery("challenge", challengeParseQuery);
+                    submissionParseQuery.whereEqualTo("user" , ParseUser.getCurrentUser());
 
 
                         challengeParseQuery.countInBackground(new CountCallback() {
@@ -83,6 +86,7 @@ public class CategoriesFragment extends android.support.v4.app.Fragment {
                                     @Override
                                     public void done(int i2, ParseException e) {
                                         float a = (float) i2 / i * 100;
+                                        Log.e("xapp" , a + " " + c.getName());
                                         c.setProgress((int)a);
                                         adapter.notifyDataSetChanged();
                                     }
