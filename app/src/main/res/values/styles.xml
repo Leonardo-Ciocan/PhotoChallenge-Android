@@ -12,6 +12,7 @@
         <!-- colorAccent is used as the default value for colorControlActivated,
              which is used to tint widgets -->
         <item name="colorAccent">@color/brand</item>
+        <item name="android:navigationBarColor">@color/brandDark</item>
 
         <!-- You can also set colorControlNormal, colorControlActivated
              colorControlHighlight, and colorSwitchThumbNormal. -->
@@ -44,7 +45,7 @@
 
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">#bc000000</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">

@@ -24,6 +24,4 @@ public class Core {
     public static HashMap<Challenge , Submission> Submissions = new HashMap<Challenge , Submission>();
     public static int totalChallenges;
     public static int completedChallenges;
-    public static SparseArray<Integer> completed = new SparseArray<>();
-    public static HashMap<Category , Integer> totals = new HashMap<>();
 }

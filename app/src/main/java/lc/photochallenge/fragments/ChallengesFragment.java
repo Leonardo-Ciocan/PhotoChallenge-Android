@@ -2,6 +2,7 @@ package lc.photochallenge.fragments;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,10 +86,16 @@ public class ChallengesFragment extends android.support.v4.app.Fragment {
                 Core.selectedChallenge = Core.Challenges.get(getArguments().getInt("category")).get(position);
                 //Intent i = new Intent(getActivity(), ChallengeActivity.class);
                 //startActivity(i);
-                ImageView cardImage = (ImageView) view.findViewById(R.id.img);
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), cardImage, "cardImage");
-                Intent intent = new Intent(getActivity(), ChallengeActivity.class);
-                getActivity().startActivity(intent, options.toBundle());
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ImageView cardImage = (ImageView) view.findViewById(R.id.img);
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), cardImage, "cardImage");
+                    Intent intent = new Intent(getActivity(), ChallengeActivity.class);
+                    getActivity().startActivity(intent, options.toBundle());
+                }
+                else{
+                    Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                    startActivity(i);
+                }
             }
         });
 

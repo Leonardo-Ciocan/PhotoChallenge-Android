@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
@@ -13,6 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.Interpolator;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,9 +61,6 @@ public class ChallengeActivity extends ActionBarActivity {
     @Bind(R.id.category)
     TextView category;
 
-    @Bind(R.id.difficulty)
-    TextView difficulty;
-
     @Bind(R.id.followingSubs)
     TextView followingSubs;
 
@@ -66,16 +68,41 @@ public class ChallengeActivity extends ActionBarActivity {
     LinearLayout following_pics;
 
     Bitmap bitmap;
+    private Animation introAnimation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge);
-        postponeEnterTransition();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) postponeEnterTransition();
+
+        introAnimation = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                super.applyTransformation(interpolatedTime, t);
+                camera.setRotation(interpolatedTime * 360);
+                camera.setTranslationX(500 - interpolatedTime * 500);
+                name.setTranslationX(1000-interpolatedTime*1000);
+                category.setTranslationX(-1000+interpolatedTime*1000);
+            }
+        };
+
+
         Slidr.attach(this);
         ButterKnife.bind(this);
+
+
+        introAnimation.setDuration(1500);
+        introAnimation.setStartTime(3000);
+        introAnimation.setInterpolator(new OvershootInterpolator());
+
+        //name.setTranslationX(1000);
+        //category.setTranslationX(-1000);
+        //difficulty.setTranslationX(1000);
+        //camera.setTranslationX(500);
         name.setText(Core.selectedChallenge.getName());
 
-        if( Core.Submissions.containsKey(Core.selectedChallenge)){
+        if(Core.Submissions.containsKey(Core.selectedChallenge)){
             Submission s = Core.Submissions.get(Core.selectedChallenge);
             if(s.getPhoto().getUrl().equals("")) {
                 s.getPhoto().getDataInBackground(new GetDataCallback() {
@@ -95,7 +122,7 @@ public class ChallengeActivity extends ActionBarActivity {
 
                     @Override
                     public void onError() {
-
+                        scheduleStartPostponedTransition(image);
                     }
                 });
 
@@ -123,7 +150,6 @@ public class ChallengeActivity extends ActionBarActivity {
             }
         });
         category.setText(Core.selectedCategory.getName());
-        difficulty.setText(DifficultyTabAdapter.difficulties[Core.selectedChallenge.getDifficulty()]);
     }
 
     @OnClick(R.id.following_pics)
@@ -212,32 +238,46 @@ public class ChallengeActivity extends ActionBarActivity {
     @Override
     public void onEnterAnimationComplete() {
         super.onEnterAnimationComplete();
+        Toast.makeText(this , "A" , Toast.LENGTH_LONG).show();
 
     }
 
     @Override
     public void finishAfterTransition() {
         super.finishAfterTransition();
+        Toast.makeText(this , "B" , Toast.LENGTH_LONG).show();
 
     }
 
     private void scheduleStartPostponedTransition(final View sharedElement) {
-        sharedElement.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
-                        startPostponedEnterTransition();
-                        /*camera.animate().setStartDelay(2500).translationY(0).alpha(1).setDuration(3000).withStartAction(new Runnable() {
-                            public void run() {
-                                camera.setTranslationY(1500);
-                                camera.setAlpha(0);
-                                // do something
-                            }
-                        }).start();*/
-                        return true;
-                    }
-                });
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            sharedElement.getViewTreeObserver().addOnPreDrawListener(
+                    new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+                            startPostponedEnterTransition();
+                            camera.startAnimation(introAnimation);
+                            return true;
+                        }
+                    });
+        }
+        else{
+            camera.startAnimation(introAnimation);
+        }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        introAnimation.setInterpolator(new ReverseInterpolator());
+        camera.startAnimation(introAnimation);
+    }
+
+    public class ReverseInterpolator implements Interpolator {
+        @Override
+        public float getInterpolation(float paramFloat) {
+            return Math.abs(paramFloat -1f);
+        }
+    }
 }
